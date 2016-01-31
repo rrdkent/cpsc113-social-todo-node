@@ -1,5 +1,16 @@
 var express = require('express');
+var exphbs = require('express-handlebars');
 var app = express();
+
+
+//This was added from the https://github.com/ericf/express-handlebars under "Basic Usage"
+app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.set('view engine', 'handlebars');
+
+app.get('/', function (req, res) {
+    res.render('index');
+});
+
 
 app.get('/', function (req, res) {
   res.send('Hello World, we have liftoffs!');
