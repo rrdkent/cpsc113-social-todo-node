@@ -11,4 +11,10 @@ var UserSchema = new Schema({
     hashed_password:    String
 });
 
+
+UserSchema.statics.count = function (cb) {
+  return this.model('Users').find({}, cb);
+}
+
+
 module.exports = mongoose.model('Users', UserSchema);
