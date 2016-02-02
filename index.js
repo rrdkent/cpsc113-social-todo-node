@@ -19,7 +19,7 @@ app.get('/', function (req, res) {
     if (err){
       res.send('error getting users');
     }else{
-  res.send('I found ' + users.length + ' users');
+      res.render('index', {userCount: users.length});
     }
   });
 });
