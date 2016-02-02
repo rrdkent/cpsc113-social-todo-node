@@ -1,7 +1,7 @@
 var express = require('express');
 var exphbs = require('express-handlebars');
 var app = express();
-
+var Users = require('./models/users.js')
 
 //CONFIG STUFF
 
@@ -15,7 +15,13 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 
 
 app.get('/', function (req, res) {
-    res.render('index');
+  Users.find({}, function (err, users) {
+    if (err){
+      res.send('error getting users');
+    }else{
+  res.send('I found ' + users.length + ' users');
+    }
+  });
 });
 
 
