@@ -27,7 +27,19 @@ app.get('/', function (req, res) {
 
 //Here we create a controller to submit the code to the DB (2:09 from social todo handle submitted registration form video)
 app.post('/user/register', function (req, res) {
-    res.send(req.body);
+    var newUser = new Users();
+    newUser.hashed_password = req.body.password;
+    newUser.email = req.body.email;
+    newUser.name = req.body.fl_name;
+    newUser.save(function(err){
+      if(err){
+        res.send('Oh Noes!  There was an error saving the user!!!');
+      }else{
+        res.redirect('/');      
+        
+      }
+      })    
+
     console.log('The User has the E-mail address', req.body.email);
 });
 
