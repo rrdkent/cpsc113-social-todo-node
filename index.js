@@ -1,7 +1,8 @@
 var express = require('express');
 var exphbs = require('express-handlebars');
 var app = express();
-var Users = require('./models/users.js')
+var Users = require('./models/users.js');
+var session = require('express-session');
 
 //CONFIG STUFF
 
@@ -11,6 +12,42 @@ app.set('view engine', 'handlebars');
 // This is for the body parser.  Not sure what it does, but Kyle says we need it.
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
+
+
+
+
+
+
+//Here be dragons.  Nay, Express Session!
+
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: 'auto' }
+}))
+
+app.use(function(req, res, next){
+  if(req.session.views){
+    req.session.views++;
+  }else{
+    req.session.views = 1;
+  }
+  console.log('Person has visited' + req.session.views + 'times.');
+  next();
+})
+
+
+
+//End Express Session
+
+
+
+
+
+
+
 
 
 
@@ -25,6 +62,11 @@ app.get('/', function (req, res) {
 });
 
 
+
+
+
+
+
 //Here we create a controller to submit the code to the DB (2:09 from social todo handle submitted registration form video)
 app.post('/user/register', function (req, res) {
   //Now we validate the password
@@ -32,10 +74,7 @@ app.post('/user/register', function (req, res) {
     return res.render('index', {errors: "Password and password confirmation do not match.  Whoops!"});
     
   }
-  
-  
-  
-  //End password validation
+//End password validation
   
   
   
