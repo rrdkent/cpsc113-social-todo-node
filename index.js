@@ -33,7 +33,7 @@ app.post('/user/register', function (req, res) {
     newUser.name = req.body.fl_name;
     newUser.save(function(err){
       if(err){
-        res.send('Oh Noes!  There was an error saving the user!!!');
+        res.render('index', {errors: err});
       }else{
         res.redirect('/');      
         
