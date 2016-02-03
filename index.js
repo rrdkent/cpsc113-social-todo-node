@@ -25,18 +25,22 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: 'auto' }
-}))
+  cookie: { secure: 'auto' },
+}));
 
 app.use(function(req, res, next){
-  if(req.session.views){
-    req.session.views++;
+  console.log('the userid is ', req.session.userId);
+  if(req.session.userId){
+    Users.findById(req.session.userId, function(err, user){
+      if(!err){
+        res.locals.currentUser = user;
+      }
+      next(); 
+    });
   }else{
-    req.session.views = 1;
-  }
-  console.log('Person has visited' + req.session.views + 'times.');
-  next();
-})
+    next();
+  }    
+});
 
 
 
@@ -52,11 +56,14 @@ app.use(function(req, res, next){
 
 
 app.get('/', function (req, res) {
-  Users.find({}, function (err, users) {
+  Users.count(function (err, users) {
     if (err){
       res.send('error getting users');
     }else{
-      res.render('index', {userCount: users.length});
+      res.render('index', {
+        userCount: users.length,
+        currentUser: res.locals.currentUser
+      });
     }
   });
 });
@@ -78,20 +85,22 @@ app.post('/user/register', function (req, res) {
   
   
   
-  
+//Here is where we add new users!    
   
     var newUser = new Users();
     newUser.hashed_password = req.body.password;
     newUser.email = req.body.email;
     newUser.name = req.body.fl_name;
-    newUser.save(function(err){
+    newUser.save(function(err, user){
       if(err){
         res.render('index', {errors: err});
       }else{
-        res.redirect('/');      
-        
+        console.log('Added a new user ', user);
+        req.session.userId = user._id;
+        console.log('req.session.userId =', req.session.userId);
+        res.redirect('/');
       }
-      })    
+    });    
 
     console.log('The User has the E-mail address', req.body.email);
 });

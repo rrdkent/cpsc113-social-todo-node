@@ -1,16 +1,16 @@
-<h1>Dan's Social To Do App: Home<h1>
+<h1>Dan's Social To Do App: Home</h1>
     
 <div>
     We currently have {{userCount}} users.  
-    
+    {{#if currentUser}}
+        Your name is <b>{{currentUser.name}}</b>
+    {{/if}}
 </div>    
 
 
 
 {{!-- Here be the error section if there is an error--}}
 {{#if errors}}
-
-
 <div style="color: red"> 
     {{errors}};
 </div>
