@@ -27,6 +27,20 @@ app.get('/', function (req, res) {
 
 //Here we create a controller to submit the code to the DB (2:09 from social todo handle submitted registration form video)
 app.post('/user/register', function (req, res) {
+  //Now we validate the password
+  if(req.body.password !== req.body.password_confirmation){
+    return res.render('index', {errors: "Password and password confirmation do not match.  Whoops!"});
+    
+  }
+  
+  
+  
+  //End password validation
+  
+  
+  
+  
+  
     var newUser = new Users();
     newUser.hashed_password = req.body.password;
     newUser.email = req.body.email;
