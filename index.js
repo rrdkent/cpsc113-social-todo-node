@@ -29,6 +29,7 @@ app.use(session({
 }));
 
 app.use(function(req, res, next){
+  console.log('req.session =', req.session);
   console.log('the userid is ', req.session.userId);
   if(req.session.userId){
     Users.findById(req.session.userId, function(err, user){
@@ -104,6 +105,22 @@ app.post('/user/register', function (req, res) {
 
     console.log('The User has the E-mail address', req.body.email);
 });
+
+//Begin Logout Handler
+
+app.get('/user/logout', function(req, res){
+  req.session.destroy();
+  res.redirect('/');
+  
+})
+
+
+
+
+//End Logout Handler.  Thanks for stopping by!
+
+
+
 
 
 app.get('/', function (req, res) {
