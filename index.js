@@ -112,6 +112,35 @@ app.post('/user/register', function (req, res) {
     console.log('The User has the E-mail address', req.body.email);
 });
 
+//Handle User/Login
+
+app.post('/user/login', function(req, res){
+  var user = Users.findOne({email: req.body.email}, function(err, user){
+  if(err || !user){
+    res.send('bad login, no such user, you dummy!')
+    return;
+  }
+  console.log('user =', user);
+  console.log('actual password =', user.hashed_password);
+  console.log('provided password =', req.body.hashed_password);
+  
+  if(user.hashed_password === req.body.password){
+      req.session.userId = user._id;
+  res.redirect('/')
+  }else{
+    res.send('bad password dude!!!')
+  }
+
+  })
+}
+
+
+);
+
+
+
+
+
 //Begin Logout Handler
 
 app.get('/user/logout', function(req, res){
