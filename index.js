@@ -124,18 +124,19 @@ app.post('/user/login', function(req, res){
   console.log('actual password =', user.hashed_password);
   console.log('provided password =', req.body.hashed_password);
   
-  if(user.hashed_password === req.body.password){
-      req.session.userId = user._id;
-  res.redirect('/')
-  }else{
-    res.send('bad password dude!!!')
-  }
+  
+  user.comparePassword(req.body.password, function(err, isMatch){
+    if(err || !ismatch){
+      res.send('bad password dude!!!')
+      
+    }else{
+          req.session.userId = user._id;
+          res.redirect('/')
 
+    }
   })
-}
-
-
-);
+  })
+});
 
 
 
