@@ -3,6 +3,7 @@ var exphbs = require('express-handlebars');
 var app = express();
 var Users = require('./models/users.js');
 var session = require('express-session');
+var MongoDBStore = require('connect-mongodb-session')(session);
 
 //CONFIG STUFF
 
@@ -13,7 +14,11 @@ app.set('view engine', 'handlebars');
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-
+//MongoDB Store - Session Persistance and password hashing, 9:45 video
+var store = new MongoDBStore({ 
+        uri: process.env.MONGO_URL,
+        collection: 'sessions'
+      });
 
 
 
@@ -26,6 +31,7 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   cookie: { secure: 'auto' },
+  store: store
 }));
 
 app.use(function(req, res, next){
